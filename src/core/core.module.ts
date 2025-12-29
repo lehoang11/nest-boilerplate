@@ -4,6 +4,7 @@ import { RedisModule } from './redis';
 import { KafkaModule } from './kafka';
 import { MailModule } from './mail';
 import { SmsModule } from './sms';
+import { TeleModule } from './tele';
 
 /**
  * Core Module
@@ -15,6 +16,7 @@ import { SmsModule } from './sms';
  * - KafkaModule (Event streaming)
  * - MailModule (Email service)
  * - SmsModule (SMS service)
+ * - TeleModule (Telegram service)
  *
  * All modules are Global, so their services are available
  * everywhere without additional imports.
@@ -26,6 +28,7 @@ import { SmsModule } from './sms';
     KafkaModule,
     MailModule,
     SmsModule,
+    TeleModule,
   ],
   exports: [
     DatabaseModule,
@@ -33,6 +36,7 @@ import { SmsModule } from './sms';
     KafkaModule,
     MailModule,
     SmsModule,
+    TeleModule,
   ],
 })
 export class CoreModule {}
