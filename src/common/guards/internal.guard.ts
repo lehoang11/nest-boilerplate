@@ -1,8 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Reflector } from '@nestjs/core'
-import { INTERNAL_AUTH_KEY } from '../decorators/internal-auth.decorator'
 import * as crypto from 'crypto'
+
+const INTERNAL_AUTH_KEY = 'internal-auth'
 
 @Injectable()
 export class InternalServiceAuthGuard implements CanActivate {
@@ -20,7 +21,7 @@ export class InternalServiceAuthGuard implements CanActivate {
 
   private initializeServices() {
     // Add admin-service
-    const adminServiceSecret = this.configService.get<string>('BACKEND_CORE_SECRET')
+    const adminServiceSecret = this.configService.get<string>('ADMIN_INTERNAL_API_KEY')
     if (adminServiceSecret) {
       this.allowedServices.set('admin-service', adminServiceSecret)
     }
