@@ -4,6 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { AppConfig, CorsConfig } from './config';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -40,6 +42,7 @@ async function bootstrap() {
       },
     }),
   );
+
 
   // Swagger setup (only in non-production)
   if (appConfig.nodeEnv !== 'production') {

@@ -1,22 +1,37 @@
 import { Module, Global } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getTypeOrmConfig } from '../../config';
+import { TypeOrmConfigModule } from './typeorm';
+import { DatabaseService } from './database.service';
+import { DatabaseHealthIndicator } from './health';
 
 /**
  * Database Module
- * Provides PostgreSQL connection via TypeORM
- * Global module - available everywhere without import
+ * Global infrastructure module for PostgreSQL/TypeORM
+ *
+ * Provides:
+ * - TypeORM connection (auto-configured from ConfigService)
+ * - DatabaseService (transactions, raw queries)
+ * - DatabaseHealthIndicator (health checks)
+ *
+ * Usage:
+ * ```typescript
+ * @Module({
+ *   imports: [DatabaseModule],
+ * })
+ * export class AppModule {}
+ * ```
+ *
+ * Inject services:
+ * ```typescript
+ * constructor(
+ *   private readonly databaseService: DatabaseService,
+ *   private readonly dbHealth: DatabaseHealthIndicator,
+ * ) {}
+ * ```
  */
 @Global()
 @Module({
-  imports: [
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: getTypeOrmConfig,
-      inject: [ConfigService],
-    }),
-  ],
-  exports: [TypeOrmModule],
+  imports: [TypeOrmConfigModule],
+  providers: [DatabaseService, DatabaseHealthIndicator],
+  exports: [TypeOrmConfigModule, DatabaseService, DatabaseHealthIndicator],
 })
 export class DatabaseModule {}

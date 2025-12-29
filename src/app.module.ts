@@ -5,6 +5,9 @@ import { configurations, validateEnvFactory, SecurityConfig } from './config';
 import { CoreModule } from './core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -46,6 +49,16 @@ import { AppService } from './app.service';
     // ============================================
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+  {
+    provide: APP_FILTER,
+    useClass: HttpExceptionFilter,
+  },
+  {
+    provide: APP_INTERCEPTOR,
+    useClass: ResponseInterceptor,
+  },
+  ],
 })
 export class AppModule {}
